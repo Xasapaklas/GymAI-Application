@@ -1,0 +1,5 @@
+{
+  "name": "GymBody AI",
+  "description": "A Mindbody-style gym management app optimized for mobile, featuring scheduling, analytics, and a Gemini-powered AI Front Desk.",
+  "requestFramePermissions": []
+}
