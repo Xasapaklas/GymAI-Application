@@ -26,21 +26,10 @@ const GYMS: Record<string, GymConfig> = {
   }
 };
 
-type View = 'home' | 'schedule' | 'members' | 'analytics' | 'ai' | 'gymbuddy' | 'profile' | 'settings' | 'help' | 'mysessions' | 'progress' | 'checkout';
+type View = 'home' | 'schedule' | 'members' | 'analytics' | 'ai' | 'gymbuddy' | 'profile' | 'settings' | 'help' | 'mysessions' | 'progress';
 
-const VIEW_ORDER: Record<View, number> = {
-  'home': 0,
-  'schedule': 1,
-  'ai': 2,
-  'members': 3,
-  'mysessions': 3,
-  'analytics': 4,
-  'progress': 4,
-  'gymbuddy': 5,
-  'profile': 6,
-  'settings': 7,
-  'help': 8,
-  'checkout': 9
+const VIEW_INDEX: Record<View, number> = {
+  'home': 0, 'schedule': 1, 'ai': 2, 'members': 3, 'mysessions': 3, 'analytics': 4, 'progress': 4, 'gymbuddy': 5, 'profile': 6, 'settings': 7, 'help': 8
 };
 
 export default function App() {
@@ -49,7 +38,6 @@ export default function App() {
   const [currentView, setCurrentView] = useState<View>('home');
   const [prevView, setPrevView] = useState<View>('home');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isZeroG, setIsZeroG] = useState(false);
   
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') !== 'false');
   const [allClasses, setAllClasses] = useState<ClassSession[]>([]);
@@ -80,10 +68,10 @@ export default function App() {
   };
 
   const transitionClass = useMemo(() => {
-    const currentIdx = VIEW_ORDER[currentView] ?? 0;
-    const prevIdx = VIEW_ORDER[prevView] ?? 0;
-    if (currentIdx === prevIdx) return 'view-fade';
-    return currentIdx > prevIdx ? 'view-slide-right' : 'view-slide-left';
+    const cur = VIEW_INDEX[currentView] ?? 0;
+    const prev = VIEW_INDEX[prevView] ?? 0;
+    if (cur === prev) return 'view-fade';
+    return cur > prev ? 'view-slide-right' : 'view-slide-left';
   }, [currentView, prevView]);
 
   const isAdmin = user?.role === 'admin' || user?.role === 'owner';
@@ -92,7 +80,7 @@ export default function App() {
     if (!user || !gym) return null;
     let content;
     switch (currentView) {
-      case 'home': content = <HomeDashboard user={user} gym={gym} isZeroG={isZeroG} onAction={handleViewChange} />; break;
+      case 'home': content = <HomeDashboard user={user} gym={gym} onAction={handleViewChange} />; break;
       case 'schedule': content = <Schedule userRole={user.role} classes={allClasses} bookedIds={new Set()} onToggleBooking={() => {}} />; break;
       case 'ai': content = <AIAssistant mode="front_desk" gym={gym} />; break;
       case 'members': content = isAdmin ? <Members gym_id={gym.id} /> : null; break;
@@ -102,7 +90,7 @@ export default function App() {
       case 'settings': content = <Settings user={user} darkMode={darkMode} toggleDarkMode={() => setDarkMode(!darkMode)} />; break;
       case 'mysessions': content = <MySessions bookedClasses={[]} onNavigateToSchedule={() => handleViewChange('schedule')} onToggleBooking={() => {}} />; break;
       case 'progress': content = <Progress />; break;
-      default: content = <HomeDashboard user={user} gym={gym} isZeroG={isZeroG} onAction={handleViewChange} />;
+      default: content = <HomeDashboard user={user} gym={gym} onAction={handleViewChange} />;
     }
     return <div key={currentView} className={`w-full h-full scroll-container ${transitionClass}`}>{content}</div>;
   };
@@ -112,42 +100,37 @@ export default function App() {
   return (
     <div className={`fixed inset-0 flex flex-col transition-colors duration-300 overflow-hidden ${darkMode ? 'bg-zinc-950 text-zinc-100' : 'bg-zinc-50 text-zinc-900'}`}>
       
-      {/* Dynamic Header - Optimized for Notch */}
-      <header className="shrink-0 z-50 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-800 px-6 pt-safe pb-4 flex items-center justify-between min-h-[calc(70px+var(--sat))]">
+      {/* Mobile Header */}
+      <header className="shrink-0 z-50 nav-blur border-b border-zinc-800 px-6 pt-safe pb-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <button onClick={() => setIsMenuOpen(true)} className="p-2 -ml-2 text-zinc-400 hover:text-yellow-400 active:scale-90">
-            <Menu size={26} />
+          <button onClick={() => setIsMenuOpen(true)} className="p-2 -ml-2 text-zinc-400 active:scale-90 transition-all">
+            <Menu size={24} />
           </button>
           <h1 className="text-xl font-black text-white italic tracking-tighter uppercase" onClick={() => handleViewChange('home')}>{gym.name}</h1>
         </div>
-        <div className="flex items-center gap-3">
-          <button onClick={() => setIsZeroG(!isZeroG)} className={`p-2 rounded-xl transition-all ${isZeroG ? 'bg-yellow-400 text-black shadow-[0_0_15px_rgba(250,204,21,0.4)]' : 'bg-zinc-900 text-zinc-500'}`}>
-            <Wind size={22} />
-          </button>
-          <img src={user.avatar} className="w-9 h-9 rounded-xl border-2 border-yellow-400 object-cover" onClick={() => handleViewChange('profile')} />
-        </div>
+        <img src={user.avatar} className="w-9 h-9 rounded-xl border-2 border-yellow-400 object-cover" onClick={() => handleViewChange('profile')} />
       </header>
 
-      {/* Main Container - The Viewport */}
+      {/* Primary Container */}
       <main className="flex-1 relative overflow-hidden">
         {renderContent()}
       </main>
 
-      {/* Modern Bottom Nav - Optimized for Home Bar */}
-      <nav className="shrink-0 z-50 bg-zinc-950/95 backdrop-blur-xl border-t border-zinc-800 px-6 pb-safe pt-2 flex items-center justify-around h-auto min-h-[calc(85px+var(--sab))]">
+      {/* Native Bottom Bar */}
+      <nav className="shrink-0 z-50 nav-blur border-t border-zinc-800 px-6 pb-safe pt-2 flex items-center justify-around">
          <NavTab icon={<LayoutDashboard />} label="Home" active={currentView === 'home'} onClick={() => handleViewChange('home')} />
          <NavTab icon={<Calendar />} label="Booking" active={currentView === 'schedule'} onClick={() => handleViewChange('schedule')} />
          
          <div className="relative -top-6">
-            <button onClick={() => handleViewChange('ai')} className={`w-14 h-14 rounded-2xl flex items-center justify-center border-4 border-zinc-950 shadow-2xl transition-all active:scale-90 ${currentView === 'ai' ? 'bg-yellow-400 text-black' : 'bg-zinc-800 text-zinc-400'}`}>
-              <MessageSquare size={28} fill="currentColor" />
+            <button onClick={() => handleViewChange('ai')} className={`w-14 h-14 rounded-2xl flex items-center justify-center border-4 border-zinc-950 shadow-2xl transition-all active:scale-95 ${currentView === 'ai' ? 'bg-yellow-400 text-black' : 'bg-zinc-800 text-zinc-400'}`}>
+              <MessageSquare size={26} fill="currentColor" />
             </button>
          </div>
 
          {isAdmin ? (
             <>
                <NavTab icon={<Users />} label="Clients" active={currentView === 'members'} onClick={() => handleViewChange('members')} />
-               <NavTab icon={<BarChart3 />} label="Data" active={currentView === 'analytics'} onClick={() => handleViewChange('analytics')} />
+               <NavTab icon={<BarChart3 />} label="Analytics" active={currentView === 'analytics'} onClick={() => handleViewChange('analytics')} />
             </>
          ) : (
             <>
@@ -160,10 +143,10 @@ export default function App() {
       {/* Sidebar Drawer */}
       {isMenuOpen && (
         <div className="fixed inset-0 z-[100] flex">
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}></div>
-          <div className="relative w-72 bg-zinc-900 h-full border-r border-zinc-800 flex flex-col pt-safe animate-in slide-in-from-left duration-300">
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setIsMenuOpen(false)}></div>
+          <div className="relative w-72 bg-zinc-900 h-full border-r border-zinc-800 flex flex-col pt-safe animate-in slide-in-from-left duration-200">
             <div className="p-6 border-b border-zinc-800 flex justify-between items-center">
-               <span className="font-black text-white uppercase italic tracking-tighter text-lg">System Node</span>
+               <span className="font-black text-white uppercase italic text-lg">Menu</span>
                <button onClick={() => setIsMenuOpen(false)} className="text-zinc-500 p-2"><X size={24} /></button>
             </div>
             <div className="flex-1 p-4 space-y-2 scroll-container">
@@ -172,7 +155,7 @@ export default function App() {
                <MenuButton icon={<HelpCircle />} label="Support" active={currentView === 'help'} onClick={() => handleViewChange('help')} />
             </div>
             <div className="p-6 border-t border-zinc-800 pb-safe">
-               <button onClick={() => setUser(null)} className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-red-500/10 text-red-500 font-black uppercase tracking-widest transition-all">
+               <button onClick={() => setUser(null)} className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-red-500/10 text-red-500 font-black uppercase tracking-widest active:bg-red-500 active:text-white transition-all">
                   <LogOut size={18} /> <span>Sign Out</span>
                </button>
             </div>
@@ -185,44 +168,44 @@ export default function App() {
 
 function NavTab({ icon, label, active, onClick }: any) {
   return (
-    <button onClick={onClick} className={`flex flex-col items-center gap-1.5 flex-1 transition-all ${active ? 'text-yellow-400' : 'text-zinc-500'}`}>
+    <button onClick={onClick} className={`flex flex-col items-center gap-1.5 flex-1 py-2 transition-all ${active ? 'text-yellow-400' : 'text-zinc-500'}`}>
       <div className={`p-1.5 rounded-xl ${active ? 'bg-yellow-400/10' : ''}`}>{React.cloneElement(icon, { size: 22, strokeWidth: active ? 3 : 2 })}</div>
-      <span className="text-[9px] font-black uppercase tracking-widest leading-none">{label}</span>
+      <span className="text-[8px] font-black uppercase tracking-widest">{label}</span>
     </button>
   );
 }
 
 function MenuButton({ icon, label, active, onClick }: any) {
   return (
-    <button onClick={onClick} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-black uppercase tracking-tight italic ${active ? 'bg-yellow-400 text-black shadow-lg' : 'text-zinc-400'}`}>
+    <button onClick={onClick} className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all font-black uppercase italic ${active ? 'bg-yellow-400 text-black shadow-lg' : 'text-zinc-400'}`}>
       {React.cloneElement(icon, { size: 20, strokeWidth: active ? 3 : 2 })} <span>{label}</span>
     </button>
   );
 }
 
-const HomeDashboard = ({ user, gym, onAction, isZeroG }: any) => {
+const HomeDashboard = ({ user, gym, onAction }: any) => {
   const isAdmin = user.role === 'admin' || user.role === 'owner';
   return (
     <div className="p-6 space-y-8 pb-12">
-      <div className={`bg-yellow-400 rounded-[2.5rem] p-8 text-black shadow-2xl relative overflow-hidden transition-all duration-700 ${isZeroG ? 'anti-gravity' : ''}`}>
+      <div className="bg-yellow-400 rounded-[2.5rem] p-8 text-black shadow-2xl relative overflow-hidden">
         <div className="absolute top-2 right-2 p-2 opacity-10 rotate-12 scale-150"><Zap size={100} fill="black" /></div>
-        <p className="font-bold text-lg mb-1 opacity-70 italic">{isAdmin ? 'Admin Console' : 'Member Portal'}</p>
+        <p className="font-bold text-sm mb-1 opacity-70 italic">{isAdmin ? 'ADMIN ACCESS' : 'MEMBER ACCESS'}</p>
         <h1 className="text-5xl font-black tracking-tighter uppercase italic leading-none">{user.name.split(' ')[0]}</h1>
         {!isAdmin && (
-           <div className="mt-6 bg-black text-yellow-400 inline-flex items-center gap-2 px-4 py-2 rounded-2xl border-2 border-black">
-              <span className="text-[10px] font-black uppercase tracking-widest">Credits</span>
+           <div className="mt-6 bg-black text-yellow-400 inline-flex items-center gap-2 px-4 py-2 rounded-2xl shadow-inner">
+              <span className="text-[10px] font-black uppercase tracking-widest">CREDITS</span>
               <span className="text-xl font-black">{user.credits}</span>
            </div>
         )}
       </div>
 
       <div>
-        <h3 className="text-zinc-500 font-black text-[10px] uppercase tracking-[0.3em] mb-4 px-2">Essential Node</h3>
+        <h3 className="text-zinc-500 font-black text-[10px] uppercase tracking-[0.3em] mb-4 px-2">Primary Nodes</h3>
         <div className="grid grid-cols-2 gap-4">
-           <DashboardAction icon={<Calendar />} label="Bookings" onClick={() => onAction('schedule')} />
-           <DashboardAction icon={<TrendingUp />} label="Progress" onClick={() => onAction('progress')} />
-           <DashboardAction icon={<BrainCircuit />} label="AI Coach" onClick={() => onAction('gymbuddy')} />
-           <DashboardAction icon={<ShoppingBag />} label="Shop" onClick={() => onAction('home')} />
+           <DashboardAction icon={<Calendar />} label="Book Session" onClick={() => onAction('schedule')} />
+           <DashboardAction icon={<TrendingUp />} label="View Stats" onClick={() => onAction('progress')} />
+           <DashboardAction icon={<BrainCircuit />} label="AI Trainer" onClick={() => onAction('gymbuddy')} />
+           <DashboardAction icon={<ShoppingBag />} label="Gear Shop" onClick={() => onAction('home')} />
         </div>
       </div>
     </div>
@@ -243,8 +226,8 @@ const generateMockSchedule = (gym_id: string): ClassSession[] => {
     const dateStr = d.toISOString().split('T')[0];
     [9, 12, 18].forEach((h) => {
       sessions.push({
-        id: `s-${i}-${h}`, gym_id, date: dateStr, title: 'Performance Elite', instructor: 'Coach X',
-        time: `${h}:00 ${h >= 12 ? 'PM' : 'AM'}`, duration: '60m', category: 'Strength', capacity: 10, booked: 6
+        id: `s-${i}-${h}`, gym_id, date: dateStr, title: 'Performance Core', instructor: 'Coach Elite',
+        time: `${h}:00 ${h >= 12 ? 'PM' : 'AM'}`, duration: '60m', category: 'Strength', capacity: 10, booked: 5
       });
     });
     d.setDate(d.getDate() + 1);
