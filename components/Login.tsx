@@ -1,112 +1,134 @@
 
 import React, { useState } from 'react';
-import { User, UserRole } from '../types';
-import { Dumbbell, ArrowRight, AlertCircle } from 'lucide-react';
+import { User, GymConfig } from '../types';
+import { ShieldCheck, ArrowRight, User as UserIcon, Lock } from 'lucide-react';
 
 interface LoginProps {
   onLogin: (user: User) => void;
+  gyms: Record<string, GymConfig>;
 }
 
-export const Login: React.FC<LoginProps> = ({ onLogin }) => {
+export const Login: React.FC<LoginProps> = ({ onLogin, gyms }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
-    // Hardcoded Credentials Logic
-    if (username === 'admin' && password === 'admin') {
-      onLogin({
-        username: 'admin',
-        role: 'admin',
-        name: 'Admin User',
-        avatar: 'https://picsum.photos/200?random=1'
-      });
-    } else if (username === 'OG' && password === 'OG') {
-      onLogin({
-        username: 'OG',
-        role: 'client-og',
-        name: 'Open Gym Client',
-        avatar: 'https://picsum.photos/200?random=2'
-      });
-    } else if (username === 'SP' && password === 'SP') {
-      onLogin({
-        username: 'SP',
-        role: 'client-sp',
-        name: 'Semi Personal Client',
-        avatar: 'https://picsum.photos/200?random=3'
-      });
-    } else {
-      setError('Invalid username or password');
-    }
+    const targetGymId = 'gymbody';
+
+    setTimeout(() => {
+      // Requested Strict Credentials Logic
+      if (username === 'gmadmin' && password === 'gmadmin') {
+        onLogin({
+          id: 'u_admin_1',
+          username: 'gmadmin',
+          role: 'admin',
+          name: 'GymBody Admin',
+          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=admin',
+          gym_id: targetGymId,
+          credits: 999
+        });
+      } else if (username === 'gmog' && password === 'gmog') {
+        onLogin({
+          id: 'u_og_1',
+          username: 'gmog',
+          role: 'client-og',
+          name: 'Alex (Open Gym)',
+          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alex',
+          gym_id: targetGymId,
+          credits: 12
+        });
+      } else if (username === 'gmsp' && password === 'gmsp') {
+        onLogin({
+          id: 'u_sp_1',
+          username: 'gmsp',
+          role: 'client-sp',
+          name: 'Sarah (Semi-Personal)',
+          avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=sarah',
+          gym_id: targetGymId,
+          credits: 8
+        });
+      } else {
+        setError('Authentication Failed: Invalid credentials.');
+      }
+      setLoading(false);
+    }, 600);
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 animate-in fade-in duration-500">
+    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 animate-in fade-in duration-700">
       <div className="w-full max-w-sm">
-        {/* Logo Area */}
         <div className="flex flex-col items-center mb-10">
-          <div className="w-24 h-24 bg-yellow-400 rounded-3xl flex items-center justify-center border-4 border-black shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] mb-4 rotate-3 transform hover:rotate-6 transition-transform">
-            <Dumbbell size={48} className="text-black" strokeWidth={2.5} />
-          </div>
-          <h1 className="text-4xl font-black text-white tracking-tighter italic">GymBody <span className="text-yellow-400">AI</span></h1>
-          <p className="text-zinc-500 font-bold uppercase tracking-widest text-xs mt-2">Member Portal</p>
+           <div className="w-20 h-20 bg-yellow-400 rounded-[2.2rem] flex items-center justify-center shadow-[0_0_40px_rgba(250,204,21,0.15)] border-4 border-zinc-900 rotate-2 mb-6">
+              <ShieldCheck className="text-black" size={42} strokeWidth={2.5} />
+           </div>
+           <h1 className="text-4xl font-black text-white italic tracking-tighter uppercase leading-none">
+             GymBody <span className="text-zinc-500">Node</span>
+           </h1>
+           <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em] mt-3">Multi-Tenant AI Platform</p>
         </div>
 
-        {/* Login Form */}
-        <div className="bg-zinc-900 border-2 border-zinc-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-2 bg-yellow-400"></div>
+        <div className="bg-zinc-900 rounded-[3rem] border-2 border-zinc-800 p-10 shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-1.5 bg-yellow-400 group-focus-within:h-2 transition-all"></div>
           
-          <h2 className="text-2xl font-black text-white mb-6 uppercase">Sign In</h2>
-
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-zinc-400 text-xs font-black uppercase tracking-wider mb-2">Username</label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="w-full bg-zinc-950 border-2 border-zinc-800 rounded-xl p-4 text-white font-bold outline-none focus:border-yellow-400 focus:bg-zinc-900 transition-all placeholder:text-zinc-700"
-                placeholder="Enter username"
-              />
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div className="text-center mb-2">
+              <h2 className="text-xl font-black text-white uppercase tracking-tight italic">Authentication</h2>
+              <p className="text-zinc-600 text-[10px] mt-1 font-black uppercase tracking-widest">Access secure gateway</p>
             </div>
-            
-            <div>
-              <label className="block text-zinc-400 text-xs font-black uppercase tracking-wider mb-2">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-zinc-950 border-2 border-zinc-800 rounded-xl p-4 text-white font-bold outline-none focus:border-yellow-400 focus:bg-zinc-900 transition-all placeholder:text-zinc-700"
-                placeholder="••••••"
-              />
+
+            <div className="space-y-4">
+              <div className="relative">
+                <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={18} />
+                <input 
+                  type="text" 
+                  value={username} 
+                  onChange={e => setUsername(e.target.value)} 
+                  placeholder="Username" 
+                  className="w-full bg-zinc-950 border-2 border-zinc-800 rounded-2xl py-4 pl-12 pr-6 text-white font-bold outline-none focus:border-yellow-400 transition-all placeholder:text-zinc-800" 
+                />
+              </div>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={18} />
+                <input 
+                  type="password" 
+                  value={password} 
+                  onChange={e => setPassword(e.target.value)} 
+                  placeholder="Password" 
+                  className="w-full bg-zinc-950 border-2 border-zinc-800 rounded-2xl py-4 pl-12 pr-6 text-white font-bold outline-none focus:border-yellow-400 transition-all placeholder:text-zinc-800" 
+                />
+              </div>
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border-2 border-red-500/50 rounded-xl p-3 flex items-center gap-2 text-red-400 text-sm font-bold animate-in slide-in-from-top-2">
-                <AlertCircle size={16} />
+              <div className="bg-red-500/10 border-2 border-red-500/20 text-red-500 text-[10px] font-black uppercase py-4 rounded-2xl text-center animate-in shake duration-300">
                 {error}
               </div>
             )}
 
-            <button
-              type="submit"
-              className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-black text-lg py-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:translate-y-[2px] active:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center justify-center gap-2 mt-4"
+            <button 
+              type="submit" 
+              disabled={loading}
+              className={`w-full py-5 rounded-2xl font-black uppercase tracking-widest text-lg shadow-xl active:scale-95 transition-all flex items-center justify-center gap-3 ${loading ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-yellow-400 text-black hover:bg-yellow-300'}`}
             >
-              LET'S GO <ArrowRight size={20} strokeWidth={3} />
+              {loading ? 'Authenticating...' : 'Enter Workspace'} 
+              {!loading && <ArrowRight size={20} strokeWidth={3} />}
             </button>
+            
+            <div className="pt-2 text-center">
+               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-4">Credentials Preview</p>
+               <div className="grid grid-cols-3 gap-2">
+                 <button type="button" onClick={() => { setUsername('gmadmin'); setPassword('gmadmin'); }} className="p-2 bg-zinc-800 rounded-lg text-[8px] font-bold text-zinc-400 uppercase">Admin</button>
+                 <button type="button" onClick={() => { setUsername('gmog'); setPassword('gmog'); }} className="p-2 bg-zinc-800 rounded-lg text-[8px] font-bold text-zinc-400 uppercase">Open Gym</button>
+                 <button type="button" onClick={() => { setUsername('gmsp'); setPassword('gmsp'); }} className="p-2 bg-zinc-800 rounded-lg text-[8px] font-bold text-zinc-400 uppercase">Semi-P</button>
+               </div>
+            </div>
           </form>
-
-          <div className="mt-6 text-center">
-             <p className="text-zinc-500 text-xs font-medium">Demo Credentials:</p>
-             <div className="flex justify-center gap-2 mt-2 text-[10px] text-zinc-400 font-mono">
-               <span className="bg-zinc-950 px-2 py-1 rounded">admin/admin</span>
-               <span className="bg-zinc-950 px-2 py-1 rounded">OG/OG</span>
-               <span className="bg-zinc-950 px-2 py-1 rounded">SP/SP</span>
-             </div>
-          </div>
         </div>
       </div>
     </div>

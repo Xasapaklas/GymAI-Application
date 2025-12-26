@@ -1,65 +1,51 @@
 
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
+import { GymConfig } from "../types";
 
-// Store sessions by type so we can maintain separate conversations
 const chatSessions: Record<string, Chat> = {};
 
-const INSTRUCTIONS = {
-  front_desk: `
-    You are "FitBot", an advanced AI Front Desk agent for "GymBody", a premium fitness studio.
-    Your tone is energetic, professional, and helpful.
-    You have access to the following general gym information:
-    - Hours: Mon-Sat 6am-10pm, Sun Closed.
-    - Classes offered: HIIT, Yoga Flow, Power Lifting, Pilates Reformer.
-    - Membership: Silver ($50/mo), Gold ($100/mo - unlimited classes).
-    
-    Your goal is to help users with:
-    1. Explaining class types.
-    2. Membership inquiries.
-    3. General support.
-    4. If a user asks to book a class, pleasantly confirm you have added them to the waitlist or booking system (simulation).
-    
-    Keep responses concise (under 50 words) as this is a mobile chat interface.
-  `,
-  trainer: `
-    You are "GymBuddy", an elite AI Personal Trainer and Nutritionist.
-    Your tone is motivating, knowledgeable, and direct (like a coach).
-    Your goal is to help the user with:
-    1. Creating workout routines (Splits, Full body, etc).
-    2. Explaining exercises and proper form.
-    3. Nutritional advice and macro planning.
-    4. Recovery tips.
-    
-    Always be encouraging but push the user to be their best. 
-    Keep responses concise (under 80 words) and use bullet points for workouts.
-  `
-};
-
-export const getGeminiChat = (type: 'front_desk' | 'trainer'): Chat => {
-  if (!chatSessions[type]) {
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      chatSessions[type] = ai.chats.create({
-        model: 'gemini-2.5-flash',
-        config: {
-          systemInstruction: INSTRUCTIONS[type],
-        },
-      });
-    } catch (error) {
-      console.error("Failed to initialize Gemini:", error);
-      throw error;
-    }
+const getSystemInstruction = (type: 'front_desk' | 'trainer', gym: GymConfig) => {
+  if (type === 'front_desk') {
+    return `
+      You are "FitBot", the elite AI Concierge for "${gym.name}".
+      Context: ${gym.name} uses advanced AI scheduling.
+      Tone: Premium, efficient, energetic. 
+      Rules:
+      - Answer questions about classes and memberships.
+      - Keep responses under 40 words.
+      - Use emojis sparingly but effectively.
+    `;
   }
-  return chatSessions[type];
+  return `
+    You are "Coach Pro", an expert human-performance AI trainer at "${gym.name}".
+    Context: You are talking to a member on their mobile app.
+    Goal: Provide fast, actionable workout advice or motivation.
+    Format: Use bold text for exercises and short bullet points.
+  `;
 };
 
-export const sendMessageToGemini = async (message: string, type: 'front_desk' | 'trainer' = 'front_desk'): Promise<string> => {
+export const getGeminiChat = (type: 'front_desk' | 'trainer', gym: GymConfig): Chat => {
+  const sessionId = `${gym.id}_${type}`;
+  if (!chatSessions[sessionId]) {
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    chatSessions[sessionId] = ai.chats.create({
+      model: type === 'trainer' ? 'gemini-3-pro-preview' : 'gemini-3-flash-preview',
+      config: {
+        systemInstruction: getSystemInstruction(type, gym),
+        temperature: 0.7,
+      },
+    });
+  }
+  return chatSessions[sessionId];
+};
+
+export const sendMessageToGemini = async (message: string, gym: GymConfig, type: 'front_desk' | 'trainer' = 'front_desk'): Promise<string> => {
   try {
-    const chat = getGeminiChat(type);
+    const chat = getGeminiChat(type, gym);
     const result: GenerateContentResponse = await chat.sendMessage({ message });
-    return result.text || "I'm having trouble connecting to the gym network right now. Try again?";
+    return result.text || "Connection to neural gym network lost.";
   } catch (error) {
     console.error("Gemini Error:", error);
-    return "Sorry, I'm currently offline for maintenance.";
+    return "I'm cooling down. Give me a second to catch my breath.";
   }
 };
