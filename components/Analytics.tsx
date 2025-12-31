@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
@@ -20,59 +21,59 @@ const DATA_ATTENDANCE = [
 
 export const Analytics: React.FC = () => {
   return (
-    <div className="p-4 space-y-6 pb-24 animate-in fade-in duration-500">
-      <h2 className="text-2xl font-black text-white mb-4 italic uppercase tracking-wide">Business Health</h2>
+    <div className="p-6 space-y-8 pb-32 animate-in fade-in duration-500 bg-background-light h-full overflow-y-auto no-scrollbar">
+      <div>
+        <h2 className="text-2xl font-bold text-text-main tracking-tight font-display uppercase">Business Health</h2>
+        <p className="text-[10px] text-text-sub font-bold uppercase tracking-widest mt-1">Neural Enterprise Analytics</p>
+      </div>
 
-      {/* KPI Cards */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-zinc-900 p-5 rounded-3xl border-2 border-zinc-800">
-          <p className="text-zinc-500 text-[10px] uppercase font-black tracking-widest">Total Revenue</p>
-          <p className="text-3xl font-black text-yellow-400 mt-2">$34k</p>
-          <p className="text-xs text-emerald-400 mt-1 font-bold">+12% vs last mo.</p>
+        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
+          <p className="text-text-sub text-[10px] uppercase font-bold tracking-widest mb-1">Total Revenue</p>
+          <p className="text-3xl font-bold text-primary-dark tabular-nums font-display">$34k</p>
+          <p className="text-[9px] text-emerald-600 mt-1 font-bold uppercase">+12% VS LAST MO.</p>
         </div>
-        <div className="bg-zinc-900 p-5 rounded-3xl border-2 border-zinc-800">
-          <p className="text-zinc-500 text-[10px] uppercase font-black tracking-widest">Active Members</p>
-          <p className="text-3xl font-black text-white mt-2">1,245</p>
-          <p className="text-xs text-emerald-400 mt-1 font-bold">+5 new today</p>
+        <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
+          <p className="text-text-sub text-[10px] uppercase font-bold tracking-widest mb-1">Active Nodes</p>
+          <p className="text-3xl font-bold text-text-main tabular-nums font-display">1,245</p>
+          <p className="text-[9px] text-primary-dark mt-1 font-bold uppercase">+5 NEW TODAY</p>
         </div>
       </div>
 
-      {/* Charts */}
-      <div className="bg-zinc-900 p-5 rounded-3xl border-2 border-zinc-800">
-        <h3 className="text-white font-bold mb-4 uppercase text-sm tracking-wider">Weekly Revenue</h3>
+      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
+        <h3 className="text-text-main font-bold mb-6 uppercase text-[11px] tracking-widest font-display">Weekly Revenue Flow</h3>
         <div className="h-48 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={DATA_REVENUE}>
-              <XAxis dataKey="name" stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} tick={{fill: '#71717a', fontWeight: 'bold'}} />
+              <XAxis dataKey="name" stroke="#cbd5e1" fontSize={10} tickLine={false} axisLine={false} tick={{fill: '#94a3b8', fontWeight: 'bold'}} />
               <YAxis hide />
               <Tooltip 
-                contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', color: '#fff', borderRadius: '12px', border: '2px solid #27272a' }} 
-                itemStyle={{ color: '#facc15', fontWeight: 'bold' }}
-                cursor={{fill: '#27272a', opacity: 0.4}}
+                cursor={{fill: '#f8fafc'}}
+                contentStyle={{ backgroundColor: '#ffffff', borderColor: '#f1f5f9', borderRadius: '12px', boxShadow: '0 10px 40px -10px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }} 
+                itemStyle={{ color: '#13eca4', fontWeight: 'bold' }}
               />
-              <Bar dataKey="revenue" fill="#facc15" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="revenue" fill="#13eca4" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      <div className="bg-zinc-900 p-5 rounded-3xl border-2 border-zinc-800">
-        <h3 className="text-white font-bold mb-4 uppercase text-sm tracking-wider">Monthly Attendance</h3>
+      <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-soft">
+        <h3 className="text-text-main font-bold mb-6 uppercase text-[11px] tracking-widest font-display">Monthly Node Density</h3>
         <div className="h-40 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={DATA_ATTENDANCE}>
               <defs>
                 <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#13eca4" stopOpacity={0.2}/>
+                  <stop offset="95%" stopColor="#13eca4" stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <XAxis dataKey="name" stroke="#52525b" fontSize={12} tickLine={false} axisLine={false} tick={{fill: '#71717a', fontWeight: 'bold'}} />
+              <XAxis dataKey="name" stroke="#cbd5e1" fontSize={10} tickLine={false} axisLine={false} tick={{fill: '#94a3b8', fontWeight: 'bold'}} />
               <Tooltip 
-                contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '12px', border: '2px solid #27272a' }} 
-                itemStyle={{ color: '#10b981', fontWeight: 'bold' }}
+                contentStyle={{ backgroundColor: '#ffffff', borderColor: '#f1f5f9', borderRadius: '12px', boxShadow: '0 10px 40px -10px rgba(0,0,0,0.05)', border: '1px solid #f1f5f9' }} 
               />
-              <Area type="monotone" dataKey="visits" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorVisits)" />
+              <Area type="monotone" dataKey="visits" stroke="#13eca4" strokeWidth={3} fillOpacity={1} fill="url(#colorVisits)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>

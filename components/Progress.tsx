@@ -1,127 +1,155 @@
 
 import React, { useState } from 'react';
-import { TrendingUp, Plus, Dumbbell, Calendar, Target, ChevronRight } from 'lucide-react';
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-
-const PR_DATA = [
-  { date: 'Jan', weight: 80 },
-  { date: 'Feb', weight: 85 },
-  { date: 'Mar', weight: 82 },
-  { date: 'Apr', weight: 90 },
-  { date: 'May', weight: 95 },
-  { date: 'Jun', weight: 100 },
-];
+import { 
+  Dumbbell, Ruler, Activity, Info, Edit3, Save, 
+  Smile, Heart, CheckCircle2, Star, Target
+} from 'lucide-react';
 
 export const Progress: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'stats' | 'logs'>('stats');
+  const [activeTab, setActiveTab] = useState<'attendance' | 'biometrics'>('attendance');
+  const [isEditingMetrics, setIsEditingMetrics] = useState(false);
+  const [monthlyGoal, setMonthlyGoal] = useState(8);
+  
+  const [metrics, setMetrics] = useState({
+    weight: '82',
+    bodyfat: '14.5',
+    bench: '100',
+    deadlift: '140'
+  });
+
+  const attendanceCount = 5;
+  const progressPercent = Math.min((attendanceCount / monthlyGoal) * 100, 100);
 
   return (
-    <div className="p-4 space-y-6 pb-24 animate-in fade-in duration-500">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-black text-white italic tracking-wide uppercase">Progress Tracker</h2>
-        <button className="bg-yellow-400 p-3 rounded-2xl text-black shadow-lg active:scale-90 transition-all">
-          <Plus size={20} strokeWidth={3} />
-        </button>
+    <div className="h-full flex flex-col animate-in fade-in duration-500 overflow-hidden bg-background-light">
+      <div className="p-6 shrink-0 flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-text-main tracking-tight font-display">Performance Nodes</h2>
+          <p className="text-[10px] text-text-sub font-bold uppercase tracking-widest mt-1">Live Telemetry Analytics</p>
+        </div>
+        {activeTab === 'biometrics' && (
+          <button 
+            onClick={() => setIsEditingMetrics(!isEditingMetrics)}
+            className={`p-3 rounded-2xl transition-all shadow-md active:scale-90 ${isEditingMetrics ? 'bg-primary text-[#0b3d30]' : 'bg-surface-light border border-slate-100 text-text-sub'}`}
+          >
+            {isEditingMetrics ? <Save size={20} /> : <Edit3 size={20} />}
+          </button>
+        )}
       </div>
 
-      {/* PR Card */}
-      <div className="bg-zinc-900 rounded-[2rem] p-6 border-2 border-zinc-800 relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-4 opacity-10">
-          <Target size={80} className="text-yellow-400" />
-        </div>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="bg-yellow-400/20 p-2 rounded-xl text-yellow-400">
-            <Dumbbell size={20} />
-          </div>
-          <span className="text-xs font-black text-zinc-400 uppercase tracking-widest">Personal Record</span>
-        </div>
-        <h3 className="text-white font-black text-3xl italic uppercase">Bench Press</h3>
-        <div className="flex items-baseline gap-2 mt-2">
-          <span className="text-4xl font-black text-yellow-400">100</span>
-          <span className="text-xl font-bold text-zinc-500">KG</span>
-          <span className="text-xs text-emerald-400 font-bold ml-2">+5kg this month</span>
-        </div>
-
-        <div className="h-32 w-full mt-6">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={PR_DATA}>
-              <defs>
-                <linearGradient id="colorWeight" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#facc15" stopOpacity={0.3}/>
-                  <stop offset="95%" stopColor="#facc15" stopOpacity={0}/>
-                </linearGradient>
-              </defs>
-              <Tooltip 
-                contentStyle={{ backgroundColor: '#09090b', borderColor: '#27272a', borderRadius: '12px' }}
-                itemStyle={{ color: '#facc15' }}
-              />
-              <Area type="monotone" dataKey="weight" stroke="#facc15" strokeWidth={3} fillOpacity={1} fill="url(#colorWeight)" />
-            </AreaChart>
-          </ResponsiveContainer>
+      <div className="px-6 shrink-0 mb-6">
+        <div className="flex p-1 bg-surface-light rounded-xl border border-slate-100">
+           <TabBtn active={activeTab === 'attendance'} onClick={() => setActiveTab('attendance')} label="Rhythm" />
+           <TabBtn active={activeTab === 'biometrics'} onClick={() => setActiveTab('biometrics')} label="Metrics" />
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-2 bg-zinc-900 p-1 rounded-2xl border-2 border-zinc-800">
-        <button 
-          onClick={() => setActiveTab('stats')}
-          className={`flex-1 py-3 rounded-xl font-black uppercase text-xs transition-all ${activeTab === 'stats' ? 'bg-yellow-400 text-black' : 'text-zinc-500 hover:text-white'}`}
-        >
-          Insights
-        </button>
-        <button 
-          onClick={() => setActiveTab('logs')}
-          className={`flex-1 py-3 rounded-xl font-black uppercase text-xs transition-all ${activeTab === 'logs' ? 'bg-yellow-400 text-black' : 'text-zinc-500 hover:text-white'}`}
-        >
-          Activity Log
-        </button>
-      </div>
-
-      <div className="space-y-4">
-        {activeTab === 'stats' ? (
-          <>
-            <div className="grid grid-cols-2 gap-4">
-              <StatCard label="Volume" value="45.2t" trend="+12%" color="blue" />
-              <StatCard label="Workouts" value="18" trend="+2" color="purple" />
-            </div>
-            <div className="bg-zinc-900 p-5 rounded-3xl border-2 border-zinc-800 flex items-center justify-between group cursor-pointer hover:border-yellow-400 transition-all">
-              <div className="flex items-center gap-4">
-                <div className="bg-emerald-500/20 p-3 rounded-2xl text-emerald-500">
-                  <TrendingUp size={24} />
-                </div>
-                <div>
-                  <h4 className="text-white font-black uppercase italic">Monthly Report</h4>
-                  <p className="text-xs text-zinc-500 font-bold">June Performance Review</p>
-                </div>
-              </div>
-              <ChevronRight className="text-zinc-700 group-hover:text-yellow-400" />
-            </div>
-          </>
-        ) : (
-          <div className="space-y-3">
-             {[1, 2, 3].map(i => (
-               <div key={i} className="bg-zinc-900 p-4 rounded-3xl border-2 border-zinc-800 flex items-center justify-between">
-                 <div className="flex items-center gap-3">
-                    <div className="bg-zinc-800 p-3 rounded-2xl text-zinc-400"><Calendar size={18}/></div>
-                    <div>
-                      <p className="text-white font-bold">Full Body Strength</p>
-                      <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">June {20-i}, 2024</p>
-                    </div>
-                 </div>
-                 <span className="text-yellow-400 font-black">60 min</span>
+      <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-8 pb-32">
+        {activeTab === 'attendance' && (
+          <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+            <div className="bg-white border border-slate-100 rounded-3xl p-6 shadow-soft flex flex-col items-center">
+               <div className="relative w-40 h-40 flex items-center justify-center mb-6">
+                  <svg className="w-full h-full -rotate-90">
+                    <circle cx="80" cy="80" r="72" fill="none" stroke="#f1f5f9" strokeWidth="12" />
+                    <circle cx="80" cy="80" r="72" fill="none" stroke="#13eca4" strokeWidth="12" strokeDasharray="452" strokeDashoffset={452 * (1 - progressPercent/100)} strokeLinecap="round" className="transition-all duration-1000 ease-out" />
+                  </svg>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-3xl font-bold text-text-main tabular-nums font-display">{attendanceCount}</span>
+                    <span className="text-[9px] text-text-sub font-bold uppercase tracking-widest">Sessions</span>
+                  </div>
                </div>
-             ))}
+               
+               <div className="w-full bg-surface-light rounded-2xl p-5 border border-slate-50 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                     <div className="p-2 bg-primary/20 rounded-lg text-primary-dark"><Target size={18} /></div>
+                     <span className="text-xs font-bold text-text-main">Monthly Target</span>
+                  </div>
+                  <span className="text-sm font-bold text-primary-dark">{monthlyGoal} Nodes</span>
+               </div>
+            </div>
+
+            <div className="space-y-4">
+               <h4 className="text-text-sub font-bold uppercase text-[10px] tracking-[0.2em] px-2 italic">Adjust Target</h4>
+               <div className="flex gap-2">
+                  {[4, 6, 8, 10, 12].map(val => (
+                    <button 
+                      key={val} 
+                      onClick={() => setMonthlyGoal(val)}
+                      className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all border ${monthlyGoal === val ? 'bg-primary border-primary text-[#0b3d30] shadow-sm' : 'bg-white border-slate-100 text-slate-300'}`}
+                    >
+                      {val}
+                    </button>
+                  ))}
+               </div>
+            </div>
+
+            <div className="bg-emerald-50 rounded-2xl p-6 border border-emerald-100 flex items-start gap-4">
+               <div className="bg-white p-2.5 rounded-xl text-emerald-500 shadow-sm"><Smile size={24} /></div>
+               <div>
+                  <h4 className="text-emerald-900 font-bold text-sm">Consistent Progress</h4>
+                  <p className="text-[10px] text-emerald-700 font-medium uppercase leading-relaxed tracking-wider mt-1">Every visit is a building block for your longevity protocol.</p>
+               </div>
+            </div>
           </div>
+        )}
+
+        {activeTab === 'biometrics' && (
+           <div className="space-y-4 animate-in slide-in-from-left-4 duration-500">
+              <MetricInput 
+                label="Body Weight (kg)" 
+                value={metrics.weight} 
+                editable={isEditingMetrics} 
+                onChange={(v: string) => setMetrics({...metrics, weight: v})} 
+                icon={<Ruler size={16}/>}
+                color="indigo"
+              />
+              <MetricInput 
+                label="Body Fat (%)" 
+                value={metrics.bodyfat} 
+                editable={isEditingMetrics} 
+                onChange={(v: string) => setMetrics({...metrics, bodyfat: v})} 
+                icon={<Activity size={16}/>}
+                color="emerald"
+              />
+              <MetricInput 
+                label="Bench Press (kg)" 
+                value={metrics.bench} 
+                editable={isEditingMetrics} 
+                onChange={(v: string) => setMetrics({...metrics, bench: v})} 
+                icon={<Dumbbell size={16}/>}
+                color="purple"
+              />
+           </div>
         )}
       </div>
     </div>
   );
 };
 
-const StatCard = ({ label, value, trend, color }: any) => (
-  <div className="bg-zinc-900 p-5 rounded-3xl border-2 border-zinc-800">
-    <p className="text-zinc-500 text-[10px] uppercase font-black tracking-widest">{label}</p>
-    <p className="text-2xl font-black text-white mt-1">{value}</p>
-    <p className={`text-[10px] text-${color}-400 mt-1 font-bold`}>{trend} vs prev.</p>
-  </div>
+const TabBtn = ({ active, onClick, label }: any) => (
+  <button onClick={onClick} className={`flex-1 py-3 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all ${active ? 'bg-white text-primary-dark shadow-sm' : 'text-text-sub'}`}>{label}</button>
 );
+
+const MetricInput = ({ label, value, editable, onChange, icon, color }: any) => {
+  const colorMap: any = {
+    indigo: 'text-indigo-600 bg-indigo-50 border-indigo-100',
+    emerald: 'text-emerald-600 bg-emerald-50 border-emerald-100',
+    purple: 'text-purple-600 bg-purple-50 border-purple-100',
+  };
+  return (
+    <div className={`bg-white rounded-2xl p-5 border transition-all flex items-center justify-between shadow-soft ${editable ? 'border-primary ring-2 ring-primary/10' : 'border-slate-100'}`}>
+       <div className="flex items-center gap-4">
+          <div className={`p-3 rounded-xl border ${colorMap[color] || 'bg-slate-50 text-slate-400'}`}>{icon}</div>
+          <div>
+             <p className="text-[9px] font-bold text-text-sub uppercase tracking-widest mb-0.5">{label}</p>
+             {editable ? (
+                <input type="text" value={value} onChange={(e) => onChange(e.target.value)} className="bg-transparent text-xl font-bold text-text-main outline-none border-b border-primary/20 w-20 font-display" />
+             ) : (
+                <p className="text-xl font-bold text-text-main tabular-nums font-display">{value}</p>
+             )}
+          </div>
+       </div>
+       {editable && <Edit3 size={14} className="text-primary opacity-50" />}
+    </div>
+  );
+};

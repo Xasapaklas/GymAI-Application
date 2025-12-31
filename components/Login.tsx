@@ -22,7 +22,6 @@ export const Login: React.FC<LoginProps> = ({ onLogin, gyms }) => {
     const targetGymId = 'gymbody';
 
     setTimeout(() => {
-      // Requested Strict Credentials Logic
       if (username === 'gmadmin' && password === 'gmadmin') {
         onLogin({
           id: 'u_admin_1',
@@ -38,7 +37,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin, gyms }) => {
           id: 'u_og_1',
           username: 'gmog',
           role: 'client-og',
-          name: 'Alex (Open Gym)',
+          name: 'Alex Johnson',
           avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=alex',
           gym_id: targetGymId,
           credits: 12
@@ -48,7 +47,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin, gyms }) => {
           id: 'u_sp_1',
           username: 'gmsp',
           role: 'client-sp',
-          name: 'Sarah (Semi-Personal)',
+          name: 'Sarah Connor',
           avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=sarah',
           gym_id: targetGymId,
           credits: 8
@@ -61,52 +60,52 @@ export const Login: React.FC<LoginProps> = ({ onLogin, gyms }) => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 animate-in fade-in duration-700">
+    <div className="min-h-screen bg-background-light flex flex-col items-center justify-center p-6 animate-in fade-in duration-700">
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-10">
-           <div className="w-20 h-20 bg-yellow-400 rounded-[2.2rem] flex items-center justify-center shadow-[0_0_40px_rgba(250,204,21,0.15)] border-4 border-zinc-900 rotate-2 mb-6">
-              <ShieldCheck className="text-black" size={42} strokeWidth={2.5} />
+           <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-lg border-4 border-white rotate-2 mb-6">
+              <ShieldCheck className="text-[#0b3d30]" size={36} strokeWidth={2.5} />
            </div>
-           <h1 className="text-4xl font-black text-white italic tracking-tighter uppercase leading-none">
-             GymBody <span className="text-zinc-500">Node</span>
+           <h1 className="text-3xl font-bold text-text-main tracking-tighter uppercase leading-none font-display">
+             GymBody <span className="text-primary-dark">Node</span>
            </h1>
-           <p className="text-zinc-500 text-[10px] font-black uppercase tracking-[0.3em] mt-3">Multi-Tenant AI Platform</p>
+           <p className="text-text-sub text-[10px] font-bold uppercase tracking-[0.3em] mt-3">Performance AI Platform</p>
         </div>
 
-        <div className="bg-zinc-900 rounded-[3rem] border-2 border-zinc-800 p-10 shadow-2xl relative overflow-hidden group">
-          <div className="absolute top-0 left-0 w-full h-1.5 bg-yellow-400 group-focus-within:h-2 transition-all"></div>
+        <div className="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-soft relative overflow-hidden group">
+          <div className="absolute top-0 left-0 w-full h-1 bg-primary"></div>
           
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="text-center mb-2">
-              <h2 className="text-xl font-black text-white uppercase tracking-tight italic">Authentication</h2>
-              <p className="text-zinc-600 text-[10px] mt-1 font-black uppercase tracking-widest">Access secure gateway</p>
+              <h2 className="text-lg font-bold text-text-main uppercase tracking-tight font-display">Secure Entry</h2>
+              <p className="text-text-sub text-[10px] mt-1 font-bold uppercase tracking-widest">Access biometric interface</p>
             </div>
 
             <div className="space-y-4">
               <div className="relative">
-                <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={18} />
+                <UserIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
                 <input 
                   type="text" 
                   value={username} 
                   onChange={e => setUsername(e.target.value)} 
                   placeholder="Username" 
-                  className="w-full bg-zinc-950 border-2 border-zinc-800 rounded-2xl py-4 pl-12 pr-6 text-white font-bold outline-none focus:border-yellow-400 transition-all placeholder:text-zinc-800" 
+                  className="w-full bg-surface-light border border-slate-100 rounded-xl py-4 pl-12 pr-6 text-text-main font-bold outline-none focus:border-primary transition-all placeholder:text-slate-300" 
                 />
               </div>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={18} />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={18} />
                 <input 
                   type="password" 
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
                   placeholder="Password" 
-                  className="w-full bg-zinc-950 border-2 border-zinc-800 rounded-2xl py-4 pl-12 pr-6 text-white font-bold outline-none focus:border-yellow-400 transition-all placeholder:text-zinc-800" 
+                  className="w-full bg-surface-light border border-slate-100 rounded-xl py-4 pl-12 pr-6 text-text-main font-bold outline-none focus:border-primary transition-all placeholder:text-slate-300" 
                 />
               </div>
             </div>
 
             {error && (
-              <div className="bg-red-500/10 border-2 border-red-500/20 text-red-500 text-[10px] font-black uppercase py-4 rounded-2xl text-center animate-in shake duration-300">
+              <div className="bg-red-50 border border-red-100 text-red-500 text-[10px] font-bold uppercase py-3 rounded-xl text-center">
                 {error}
               </div>
             )}
@@ -114,18 +113,18 @@ export const Login: React.FC<LoginProps> = ({ onLogin, gyms }) => {
             <button 
               type="submit" 
               disabled={loading}
-              className={`w-full py-5 rounded-2xl font-black uppercase tracking-widest text-lg shadow-xl active:scale-95 transition-all flex items-center justify-center gap-3 ${loading ? 'bg-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-yellow-400 text-black hover:bg-yellow-300'}`}
+              className={`w-full py-4 rounded-xl font-bold uppercase tracking-widest text-sm shadow-lg active:scale-95 transition-all flex items-center justify-center gap-3 ${loading ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-primary text-[#0b3d30] hover:bg-primary-dark'}`}
             >
-              {loading ? 'Authenticating...' : 'Enter Workspace'} 
-              {!loading && <ArrowRight size={20} strokeWidth={3} />}
+              {loading ? 'SYNCING...' : 'Enter Hub'} 
+              {!loading && <ArrowRight size={18} />}
             </button>
             
             <div className="pt-2 text-center">
-               <p className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-4">Credentials Preview</p>
+               <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-3">Quick Login</p>
                <div className="grid grid-cols-3 gap-2">
-                 <button type="button" onClick={() => { setUsername('gmadmin'); setPassword('gmadmin'); }} className="p-2 bg-zinc-800 rounded-lg text-[8px] font-bold text-zinc-400 uppercase">Admin</button>
-                 <button type="button" onClick={() => { setUsername('gmog'); setPassword('gmog'); }} className="p-2 bg-zinc-800 rounded-lg text-[8px] font-bold text-zinc-400 uppercase">Open Gym</button>
-                 <button type="button" onClick={() => { setUsername('gmsp'); setPassword('gmsp'); }} className="p-2 bg-zinc-800 rounded-lg text-[8px] font-bold text-zinc-400 uppercase">Semi-P</button>
+                 <button type="button" onClick={() => { setUsername('gmadmin'); setPassword('gmadmin'); }} className="p-2 bg-surface-light rounded-lg text-[8px] font-bold text-slate-400 uppercase">Admin</button>
+                 <button type="button" onClick={() => { setUsername('gmog'); setPassword('gmog'); }} className="p-2 bg-surface-light rounded-lg text-[8px] font-bold text-slate-400 uppercase">Open G</button>
+                 <button type="button" onClick={() => { setUsername('gmsp'); setPassword('gmsp'); }} className="p-2 bg-surface-light rounded-lg text-[8px] font-bold text-slate-400 uppercase">Semi P</button>
                </div>
             </div>
           </form>

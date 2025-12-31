@@ -1,4 +1,3 @@
-
 export type UserRole = 'owner' | 'admin' | 'trainer' | 'member' | 'client-og' | 'client-sp';
 
 export interface GymConfig {
@@ -34,7 +33,7 @@ export interface User {
 export interface ClassSession {
   id: string;
   gym_id: string;
-  date: string; // ISO Date string YYYY-MM-DD
+  date: string; 
   title: string;
   instructor: string;
   time: string;
@@ -44,14 +43,31 @@ export interface ClassSession {
   booked: number;
 }
 
+export interface Incident {
+  id: string;
+  category: 'Equipment' | 'Member' | 'Injury' | 'Cleaning';
+  title: string;
+  staffName: string;
+  timestamp: Date;
+  notes: {
+    text: string;
+    timestamp: Date;
+    staffName: string;
+  }[];
+  attachments: string[];
+  status: 'Open' | 'Resolved';
+}
+
 export interface Member {
   id: string;
   gym_id: string;
   name: string;
-  status: 'Active' | 'Inactive' | 'Pending';
+  phone: string;
+  status: 'Active' | 'Inactive' | 'Pending' | 'Expired' | 'Frozen';
   plan: 'Gold' | 'Silver' | 'Drop-in';
   lastVisit: string;
   image: string;
+  expiryDate?: string;
 }
 
 export interface ChatMessage {
@@ -61,10 +77,8 @@ export interface ChatMessage {
   timestamp: Date;
 }
 
-export interface WorkoutStat {
-  id: string;
-  date: string;
-  exercise: string;
-  weight: number;
-  reps: number;
-}
+export type View = 
+  | 'home' | 'schedule' | 'members' | 'analytics' | 'ai' 
+  | 'checkins' | 'trainers' | 'bookings' | 'messages' | 'payments' | 'incidents' | 'help' 
+  | 'sessions' | 'workouts' | 'stats' | 'challenges' | 'membership' | 'nutrition' | 'profile' | 'settings'
+  | 'custom_workouts';

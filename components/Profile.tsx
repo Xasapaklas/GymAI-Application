@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { User } from '../types';
-import { Mail, Phone, MapPin, Award, Activity, Edit2, Save, Camera } from 'lucide-react';
+import { Mail, Phone, MapPin, Award, Activity, Edit2, Save, Camera, CheckCircle2 } from 'lucide-react';
 
 interface ProfileProps {
   user: User;
@@ -9,103 +9,76 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ user }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [bio, setBio] = useState('Fitness enthusiast | Early bird | Coffee lover');
+  const [bio, setBio] = useState('Protocol: Performance Node | Early Bird Status: Active');
   
   return (
-    <div className="p-4 pb-24 animate-in fade-in duration-500">
+    <div className="p-6 pb-32 animate-in fade-in duration-500 bg-background-light">
       <div className="relative mb-16">
-        {/* Cover Image */}
-        <div className="h-32 bg-zinc-800 rounded-3xl overflow-hidden border-2 border-zinc-800 relative">
-          <div className="absolute inset-0 bg-yellow-400/10 pattern-dots"></div>
-        </div>
-        
-        {/* Avatar */}
-        <div className="absolute -bottom-12 left-6">
+        <div className="h-36 bg-gradient-to-r from-primary/30 to-emerald-500/10 rounded-3xl overflow-hidden border border-slate-100 shadow-soft"></div>
+        <div className="absolute -bottom-10 left-6">
           <div className="relative">
-             <div className="w-24 h-24 rounded-3xl border-4 border-zinc-950 bg-zinc-800 overflow-hidden">
+             <div className="w-24 h-24 rounded-2xl border-4 border-white bg-surface-light overflow-hidden shadow-lg">
                 <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
              </div>
-             <button className="absolute -bottom-2 -right-2 bg-yellow-400 p-2 rounded-xl text-black border-2 border-zinc-950 shadow-sm">
+             <button className="absolute -bottom-2 -right-2 bg-primary p-2 rounded-xl text-[#0b3d30] border-2 border-white shadow-md active:scale-90 transition-all">
                <Camera size={16} strokeWidth={2.5} />
              </button>
           </div>
         </div>
-        
-        {/* Edit Button */}
-        <div className="absolute -bottom-12 right-0">
+        <div className="absolute -bottom-10 right-0">
           <button 
             onClick={() => setIsEditing(!isEditing)}
-            className={`px-4 py-2 rounded-xl font-bold text-sm border-2 transition-all flex items-center gap-2 ${
-               isEditing 
-               ? 'bg-emerald-500 border-emerald-400 text-white' 
-               : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white'
+            className={`px-6 py-2.5 rounded-xl font-bold text-xs uppercase tracking-widest transition-all shadow-md flex items-center gap-2 ${
+               isEditing ? 'bg-emerald-500 text-white' : 'bg-white border border-slate-100 text-text-sub hover:text-text-main'
             }`}
           >
-             {isEditing ? <Save size={16} /> : <Edit2 size={16} />}
-             {isEditing ? 'Save Profile' : 'Edit Profile'}
+             {isEditing ? <Save size={14} /> : <Edit2 size={14} />}
+             {isEditing ? 'Sync' : 'Edit Profile'}
           </button>
         </div>
       </div>
 
       <div className="mt-4 px-2">
-        <h1 className="text-3xl font-black text-white tracking-tight">{user.name}</h1>
-        <p className="text-yellow-400 font-bold uppercase tracking-wide text-xs mt-1">{user.role} Member</p>
+        <h1 className="text-3xl font-bold text-text-main tracking-tight font-display">{user.name}</h1>
+        <p className="text-primary-dark font-bold uppercase tracking-widest text-[10px] mt-1 italic">{user.role} MEMBER</p>
         
         {isEditing ? (
-            <textarea 
-              value={bio} 
-              onChange={(e) => setBio(e.target.value)}
-              className="w-full bg-zinc-900 border-2 border-zinc-800 rounded-xl p-3 mt-4 text-zinc-300 focus:border-yellow-400 outline-none font-medium"
-              rows={2}
-            />
+            <textarea value={bio} onChange={(e) => setBio(e.target.value)} className="w-full bg-surface-light border border-slate-100 rounded-xl p-4 mt-6 text-text-main focus:border-primary outline-none font-medium text-sm" rows={2} />
         ) : (
-            <p className="text-zinc-500 mt-4 font-medium leading-relaxed">{bio}</p>
+            <p className="text-text-sub mt-6 font-medium leading-relaxed italic text-sm">{bio}</p>
         )}
       </div>
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-3 gap-3 mt-8">
-         <div className="bg-zinc-900 p-4 rounded-2xl border-2 border-zinc-800 text-center">
-            <Activity className="mx-auto text-emerald-500 mb-2" size={24} />
-            <p className="text-2xl font-black text-white">24</p>
-            <p className="text-[10px] text-zinc-500 font-bold uppercase">Workouts</p>
-         </div>
-         <div className="bg-zinc-900 p-4 rounded-2xl border-2 border-zinc-800 text-center">
-            <Award className="mx-auto text-yellow-400 mb-2" size={24} />
-            <p className="text-2xl font-black text-white">12</p>
-            <p className="text-[10px] text-zinc-500 font-bold uppercase">Streak</p>
-         </div>
-         <div className="bg-zinc-900 p-4 rounded-2xl border-2 border-zinc-800 text-center">
-            <MapPin className="mx-auto text-blue-500 mb-2" size={24} />
-            <p className="text-2xl font-black text-white">Home</p>
-            <p className="text-[10px] text-zinc-500 font-bold uppercase">Location</p>
-         </div>
+      <div className="grid grid-cols-3 gap-4 mt-10">
+         <ProfileStat icon={<Activity className="text-emerald-500" />} val="24" label="Nodes" />
+         <ProfileStat icon={<CheckCircle2 className="text-primary" />} val="5" label="Month" />
+         <ProfileStat icon={<Award className="text-indigo-400" />} val="7" label="Badges" />
       </div>
 
-      {/* Details */}
-      <div className="mt-8 space-y-4">
-        <h3 className="text-white font-black uppercase text-sm tracking-wider mb-4 px-2">Contact Info</h3>
-        
-        <div className="bg-zinc-900 rounded-2xl p-4 border-2 border-zinc-800 flex items-center gap-4">
-          <div className="bg-zinc-950 p-2.5 rounded-xl text-zinc-400">
-             <Mail size={20} strokeWidth={2.5} />
-          </div>
-          <div>
-            <p className="text-[10px] text-zinc-500 font-bold uppercase">Email Address</p>
-            <p className="text-white font-bold">member@gymbody.ai</p>
-          </div>
-        </div>
-
-        <div className="bg-zinc-900 rounded-2xl p-4 border-2 border-zinc-800 flex items-center gap-4">
-          <div className="bg-zinc-950 p-2.5 rounded-xl text-zinc-400">
-             <Phone size={20} strokeWidth={2.5} />
-          </div>
-          <div>
-            <p className="text-[10px] text-zinc-500 font-bold uppercase">Phone Number</p>
-            <p className="text-white font-bold">+1 (555) 123-4567</p>
-          </div>
-        </div>
+      <div className="mt-10 space-y-4">
+        <h3 className="text-text-sub font-bold uppercase text-[11px] tracking-[0.2em] px-2 font-display">Communication Protocol</h3>
+        <ContactField icon={<Mail />} label="Secure Email" val="member@gymbody.ai" />
+        <ContactField icon={<Phone />} label="Voice Node" val="+1 (555) 123-4567" />
       </div>
     </div>
   );
 };
+
+const ProfileStat = ({ icon, val, label }: any) => (
+  <div className="bg-white p-4 rounded-2xl border border-slate-100 text-center shadow-soft">
+    <div className="mx-auto mb-2.5 flex justify-center">{icon}</div>
+    <p className="text-xl font-bold text-text-main font-display leading-none tabular-nums">{val}</p>
+    <p className="text-[8px] text-text-sub font-bold uppercase tracking-widest mt-1.5">{label}</p>
+  </div>
+);
+
+const ContactField = ({ icon, label, val }: any) => (
+  <div className="bg-white rounded-2xl p-4 border border-slate-100 flex items-center gap-5 shadow-soft">
+    {/* Added <any> cast to fix TypeScript error for size and strokeWidth props in React.cloneElement */}
+    <div className="bg-surface-light p-2.5 rounded-xl text-slate-300">{React.cloneElement(icon as React.ReactElement<any>, { size: 18, strokeWidth: 2.5 })}</div>
+    <div>
+      <p className="text-[9px] text-text-sub font-bold uppercase tracking-widest mb-0.5">{label}</p>
+      <p className="text-text-main font-bold text-sm">{val}</p>
+    </div>
+  </div>
+);

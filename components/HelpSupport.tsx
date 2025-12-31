@@ -1,68 +1,60 @@
 
 import React, { useState } from 'react';
-import { ChevronDown, Phone, Mail } from 'lucide-react';
+import { Phone, Mail, Zap, Bug, Lightbulb, X, Camera, Send, CheckCircle2, FileText, ChevronRight, ShieldCheck, MessageSquare } from 'lucide-react';
+import { UserRole } from '../types';
 
-export const HelpSupport: React.FC = () => {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
-
-  const FAQS = [
-    { q: "How do I cancel a booking?", a: "Go to the Schedule tab or My Sessions. If the button says 'BOOKED', tap it again to cancel. You can cancel up to 2 hours before class." },
-    { q: "What is Open Gym vs Semi-Personal?", a: "Open Gym gives you access to the floor to do your own workout. Semi-Personal involves a coach guiding a small group of up to 6 people." },
-    { q: "How do I upgrade my membership?", a: "Please speak to the front desk or use the 'Contact Us' form below to request an upgrade to Gold tier." },
-    { q: "Can I bring a guest?", a: "Gold members can bring 1 guest per month for free. Silver members must pay a drop-in fee for guests." },
-  ];
-
+// Added userRole prop and updated React.FC type definition to fix the "IntrinsicAttributes" error in App.tsx
+export const HelpSupport: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
   return (
-    <div className="p-4 pb-24 animate-in fade-in duration-500">
-      <h2 className="text-2xl font-black text-white mb-6 italic uppercase tracking-wide">Help & Support</h2>
-
-      <div className="space-y-6">
-        {/* FAQ Section */}
+    <div className="p-6 pb-32 animate-in fade-in duration-500 space-y-10 scroll-container h-full bg-background-light">
+      <div className="flex justify-between items-start">
         <div>
-          <h3 className="text-yellow-400 font-black uppercase text-sm tracking-wider mb-3 px-1">Frequently Asked</h3>
-          <div className="space-y-3">
-            {FAQS.map((faq, idx) => (
-              <div key={idx} className="bg-zinc-900 border-2 border-zinc-800 rounded-2xl overflow-hidden transition-all">
-                <button 
-                  onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
-                  className="w-full p-4 flex items-center justify-between text-left"
-                >
-                  <span className={`font-bold ${openIndex === idx ? 'text-white' : 'text-zinc-400'}`}>{faq.q}</span>
-                  <ChevronDown size={20} className={`text-zinc-500 transition-transform ${openIndex === idx ? 'rotate-180' : ''}`} />
-                </button>
-                {openIndex === idx && (
-                  <div className="p-4 pt-0 text-zinc-500 text-sm font-medium leading-relaxed border-t-2 border-zinc-800/50 mt-2 pt-3">
-                    {faq.a}
-                  </div>
-                )}
-              </div>
-            ))}
+          <h2 className="text-2xl font-bold text-text-main tracking-tight font-display uppercase">Help Hub</h2>
+          <p className="text-text-sub text-[10px] font-bold uppercase tracking-widest mt-1">Operational support stream</p>
+        </div>
+        <div className="bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-100 flex items-center gap-2 shadow-sm">
+           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+           <span className="text-[9px] font-bold text-emerald-700 uppercase tracking-widest">Linked</span>
+        </div>
+      </div>
+
+      <section>
+        <div className="flex items-center gap-2 mb-4 px-1">
+          <MessageSquare size={14} className="text-primary" />
+          <h3 className="text-text-sub font-bold uppercase text-[10px] tracking-widest font-display">Channels</h3>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
+          <a href="tel:+15550009999" className="bg-white p-8 rounded-3xl border border-slate-100 flex flex-col items-center text-center active:scale-95 transition-all shadow-soft group hover:border-primary/50">
+            <div className="bg-primary/10 p-4 rounded-2xl text-primary-dark mb-4 transition-transform group-hover:scale-110 shadow-sm"><Phone size={24} strokeWidth={3} /></div>
+            <p className="text-text-main font-bold uppercase italic text-xs font-display">Human Desk</p>
+          </a>
+          <a href="mailto:support@gymbody.ai" className="bg-white p-8 rounded-3xl border border-slate-100 flex flex-col items-center text-center active:scale-95 transition-all shadow-soft group hover:border-primary/50">
+            <div className="bg-indigo-50 p-4 rounded-2xl text-indigo-500 mb-4 transition-transform group-hover:scale-110 shadow-sm"><Mail size={24} strokeWidth={3} /></div>
+            <p className="text-text-main font-bold uppercase italic text-xs font-display">Digital Link</p>
+          </a>
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <div className="flex items-center gap-2 mb-4 px-1">
+          <Zap size={14} className="text-primary" />
+          <h3 className="text-text-sub font-bold uppercase text-[10px] tracking-widest font-display">Diagnostics</h3>
+        </div>
+        <button className="w-full bg-white border border-slate-100 p-5 rounded-2xl flex items-center justify-between group active:scale-[0.98] transition-all shadow-soft">
+          <div className="flex items-center gap-4">
+            <div className="bg-red-50 p-3 rounded-xl text-red-400 group-hover:rotate-12 transition-transform shadow-sm"><Bug size={20} /></div>
+            <div className="text-left">
+              <span className="text-text-main font-bold uppercase italic text-sm font-display tracking-tight block">Report Anomaly</span>
+              <span className="text-text-sub text-[8px] font-bold uppercase tracking-widest italic">System Technical Log</span>
+            </div>
           </div>
-        </div>
+          <ChevronRight size={18} className="text-slate-100 group-hover:text-red-400 transition-colors" />
+        </button>
+      </section>
 
-        {/* Contact Options */}
-        <div>
-           <h3 className="text-yellow-400 font-black uppercase text-sm tracking-wider mb-3 px-1">Contact Us</h3>
-           <div className="grid grid-cols-2 gap-4">
-             <a 
-                href="tel:+15551234567"
-                className="bg-zinc-900 p-6 rounded-3xl border-2 border-zinc-800 hover:border-emerald-400 group transition-all block text-center"
-             >
-                <div className="flex justify-center">
-                    <Phone size={32} className="text-emerald-500 mb-3 group-hover:scale-110 transition-transform" />
-                </div>
-                <p className="text-white font-bold">Call Us</p>
-                <p className="text-[10px] text-zinc-500 uppercase font-bold mt-1">Direct Line</p>
-             </a>
-             <button className="bg-zinc-900 p-6 rounded-3xl border-2 border-zinc-800 hover:border-blue-400 group transition-all">
-                <div className="flex justify-center">
-                   <Mail size={32} className="text-blue-500 mb-3 group-hover:scale-110 transition-transform" />
-                </div>
-                <p className="text-white font-bold">Email Support</p>
-                <p className="text-[10px] text-zinc-500 uppercase font-bold mt-1">Response in 24h</p>
-             </button>
-           </div>
-        </div>
+      <div className="pt-10 flex flex-col items-center gap-3 opacity-20">
+        <p className="text-[9px] font-bold text-text-sub uppercase tracking-[0.4em]">GymBody AI Protocol Support</p>
+        <p className="text-[10px] font-mono text-text-sub">NODE_ID: GB-88-ALPHA-L</p>
       </div>
     </div>
   );
