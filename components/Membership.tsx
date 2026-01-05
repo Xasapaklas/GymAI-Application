@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   CreditCard, ShieldCheck, ArrowUpCircle, History, Clock, 
@@ -13,7 +12,7 @@ interface MembershipProps {
 
 const PLANS = [
   { id: 'silver', name: 'Standard Node', price: '$49/mo', desc: 'Basics Included', color: 'bg-slate-100 text-slate-500' },
-  { id: 'gold', name: 'Gold Protocol', price: '$89/mo', desc: 'High Performance', color: 'bg-primary text-[#0b3d30]' },
+  { id: 'gold', name: 'Gold Plan', price: '$89/mo', desc: 'High Performance', color: 'bg-primary text-[#0b3d30]' },
   { id: 'platinum', name: 'Elite Stream', price: '$129/mo', desc: 'Unlimited Edge', color: 'bg-indigo-600 text-white' },
 ];
 
@@ -37,7 +36,7 @@ export const Membership: React.FC<MembershipProps> = ({ user }) => {
               <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12 scale-150"><ShieldCheck size={120} fill="currentColor" /></div>
               <div className="flex justify-between items-start">
                  <div>
-                   <p className="font-bold text-[10px] uppercase tracking-widest opacity-70 mb-1">CURRENT PROTOCOL</p>
+                   <p className="font-bold text-[10px] uppercase tracking-widest opacity-70 mb-1">CURRENT PLAN</p>
                    <h1 className="text-4xl font-bold italic tracking-tighter uppercase leading-none font-display">Gold Node</h1>
                  </div>
                  <div className="bg-white/30 backdrop-blur-md px-3 py-1 rounded-lg text-[9px] font-bold uppercase tracking-widest border border-white/20">ACTIVE</div>
@@ -77,10 +76,10 @@ export const Membership: React.FC<MembershipProps> = ({ user }) => {
         </section>
 
         <section className="bg-surface-light border border-slate-100 rounded-3xl p-6 text-center group">
-           <h4 className="text-lg font-bold text-text-main mb-2 font-display">Protocol Pause</h4>
+           <h4 className="text-lg font-bold text-text-main mb-2 font-display">Plan Pause</h4>
            <p className="text-[10px] text-text-sub font-bold uppercase tracking-widest mb-6 px-4">Need rest? Freeze your billing cycles anytime without penalty.</p>
            <button className="bg-white text-text-main font-bold px-8 py-3.5 rounded-xl uppercase tracking-widest text-[10px] border border-slate-100 active:scale-95 transition-all flex items-center gap-2 mx-auto shadow-sm">
-              <Snowflake size={14} className="text-primary" /> Init Freeze Sequence
+              <Snowflake size={14} className="text-primary" /> Init Freeze
            </button>
         </section>
 

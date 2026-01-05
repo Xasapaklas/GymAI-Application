@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { 
   Search, Wallet, AlertCircle, CheckCircle, Send, X, 
@@ -59,7 +58,7 @@ export const Payments: React.FC = () => {
   return (
     <div className="animate-in fade-in duration-500 h-full flex flex-col">
       <div className="p-6 pb-0 flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-black text-white italic uppercase tracking-tighter">Payment Status</h2>
+        <h2 className="text-2xl font-black text-white italic uppercase tracking-tighter">Revenue Ops</h2>
         <div className="bg-zinc-900 px-3 py-1.5 rounded-xl border border-zinc-800 flex items-center gap-2">
            <DollarSign size={14} className="text-yellow-400" />
            <span className="text-[10px] font-black text-white uppercase tracking-widest">Revenue Ops</span>

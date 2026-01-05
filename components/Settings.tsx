@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { User } from '../types';
 import { Bell, Moon, Volume2, Shield, ChevronRight, Lock, Key, Check, X, AlertCircle } from 'lucide-react';
@@ -51,7 +50,7 @@ export const Settings: React.FC<SettingsProps> = ({ user, darkMode, toggleDarkMo
          </div>
 
          <div>
-            <p className="px-2 text-[10px] font-bold text-text-sub uppercase tracking-[0.2em] mb-4 font-display italic">Security Protocol</p>
+            <p className="px-2 text-[10px] font-bold text-text-sub uppercase tracking-[0.2em] mb-4 font-display italic">Security Settings</p>
              <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-soft divide-y divide-slate-50">
                <button className="w-full p-5 flex items-center justify-between group active:bg-slate-50 transition-colors text-left">
                   <div className="flex items-center gap-4">

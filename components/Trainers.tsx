@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { 
   Search, MessageSquare, Clock, UserCheck, UserMinus, AlertTriangle, 
@@ -104,7 +103,7 @@ export const Trainers: React.FC = () => {
     <div className="h-full flex flex-col overflow-hidden">
       <div className="p-4 shrink-0">
         <div className="flex justify-between items-center mb-6 px-2">
-          <h2 className="text-2xl font-black text-white italic uppercase tracking-tighter">Trainer Control</h2>
+          <h2 className="text-2xl font-black text-white italic uppercase tracking-tighter">Staff Roster</h2>
           <div className="bg-zinc-900 px-3 py-1.5 rounded-xl border border-zinc-800 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             <span className="text-[10px] font-black text-white uppercase tracking-widest">Today's Roster</span>

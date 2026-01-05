@@ -5,7 +5,7 @@ import {
   BrainCircuit, BookOpen, PlusCircle, TrendingUp, ShoppingBag, CreditCard, LayoutDashboard, 
   Wallet, ArrowRight, Wind, QrCode, ClipboardList, AlertTriangle, Send, Utensils, HeartPulse, 
   Trophy, UserPlus, Clock, MoreHorizontal, History, Flag, CreditCard as CardIcon, Scan, ShieldAlert,
-  Flame, Coffee, Apple, Timer, Activity, ClipboardCheck, Award, Tag, ShieldCheck
+  Flame, Coffee, Apple, Timer, Activity, ClipboardCheck, Award, Tag, ShieldCheck, Quote, AlertCircle
 } from 'lucide-react';
 
 import { Schedule } from './components/Schedule';
@@ -47,6 +47,18 @@ const VIEW_ORDER: View[] = [
   'home', 'schedule', 'members', 'analytics', 'ai', 'checkins', 'trainers',
   'messages', 'payments', 'incidents', 'sessions', 'workouts', 'custom_workouts', 'stats', 'challenges', 
   'nutrition', 'membership', 'profile', 'settings', 'help'
+];
+
+const MOTIVATIONAL_QUOTES = [
+  "The only bad workout is the one that didn't happen.",
+  "Your body can stand almost anything. It's your mind that you have to convince.",
+  "Discipline is doing what needs to be done, even if you don't want to do it.",
+  "Success starts with self-discipline.",
+  "Don't stop when you're tired. Stop when you're done.",
+  "Your health is an investment, not an expense.",
+  "Motivation is what gets you started. Habit is what keeps you going.",
+  "Consistency is the key to transformation.",
+  "Don't wish for it, work for it."
 ];
 
 const MOCK_NOTIFICATIONS: NotificationItem[] = [
@@ -98,6 +110,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [allClasses, setAllClasses] = useState<ClassSession[]>([]);
   const [bookedIds, setBookedIds] = useState<Set<string>>(new Set());
+  const [pendingBookingId, setPendingBookingId] = useState<string | null>(null);
   
   const notificationMenuRef = useRef<HTMLDivElement>(null);
 
@@ -146,12 +159,58 @@ export default function App() {
 
   const unreadCount = notifications.filter(n => !n.read).length;
 
+  const handleToggleBooking = (id: string) => {
+    const isAdding = !bookedIds.has(id);
+    
+    // If it's a cancellation, just proceed
+    if (!isAdding) {
+      setBookedIds(prev => {
+        const n = new Set(prev);
+        n.delete(id);
+        return n;
+      });
+      return;
+    }
+
+    // Check if user is already booked for another class on the same day
+    const sessionToBook = allClasses.find(c => c.id === id);
+    if (sessionToBook && !isAdmin) {
+      const alreadyBookedOnSameDay = Array.from(bookedIds).some(bookedId => {
+        const bookedSession = allClasses.find(c => c.id === bookedId);
+        return bookedSession && bookedSession.date === sessionToBook.date;
+      });
+
+      if (alreadyBookedOnSameDay) {
+        setPendingBookingId(id);
+        return;
+      }
+    }
+
+    // Default: Book immediately
+    setBookedIds(prev => {
+      const n = new Set(prev);
+      n.add(id);
+      return n;
+    });
+  };
+
+  const confirmDoubleBooking = (confirm: boolean) => {
+    if (confirm && pendingBookingId) {
+      setBookedIds(prev => {
+        const n = new Set(prev);
+        n.add(pendingBookingId);
+        return n;
+      });
+    }
+    setPendingBookingId(null);
+  };
+
   const renderContent = () => {
     if (!user || !gym) return null;
     const key = `${currentView}-${transitionKey}`;
     switch (currentView) {
-      case 'home': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><HomeView onAction={handleViewChange} /></div>;
-      case 'schedule': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><Schedule userRole={user.role} classes={allClasses} bookedIds={bookedIds} onToggleBooking={(id) => setBookedIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; })} /></div>;
+      case 'home': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><HomeView user={user} onAction={handleViewChange} /></div>;
+      case 'schedule': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><Schedule userRole={user.role} classes={allClasses} bookedIds={bookedIds} onToggleBooking={handleToggleBooking} /></div>;
       case 'members': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><Members gym_id={gym.id} /></div>;
       case 'analytics': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><Analytics /></div>;
       case 'ai': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><AIAssistant mode={isAdmin ? 'front_desk' : 'trainer'} gym={gym} /></div>;
@@ -160,7 +219,7 @@ export default function App() {
       case 'messages': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><MessagesHub user={user} classes={allClasses} notifications={notifications} setNotifications={setNotifications} /></div>;
       case 'payments': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><Payments /></div>;
       case 'incidents': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><Incidents user={user} /></div>;
-      case 'sessions': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><MySessions bookedClasses={allClasses.filter(c => bookedIds.has(c.id))} onNavigateToSchedule={() => handleViewChange('schedule')} onToggleBooking={(id) => setBookedIds(prev => { const n = new Set(prev); n.delete(id); return n; })} /></div>;
+      case 'sessions': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><MySessions bookedClasses={allClasses.filter(c => bookedIds.has(c.id))} onNavigateToSchedule={() => handleViewChange('schedule')} onToggleBooking={handleToggleBooking} /></div>;
       case 'workouts': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><Workouts /></div>;
       case 'custom_workouts': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><AdminWorkouts /></div>;
       case 'stats': return <div key={key} className={`w-full h-full scroll-container ${transitionClass}`}><Progress /></div>;
@@ -191,7 +250,7 @@ export default function App() {
     { view: 'schedule', icon: <Calendar />, label: 'Book Session' },
     { view: 'sessions', icon: <History />, label: 'My Sessions' },
     { view: 'workouts', icon: <Dumbbell />, label: 'My Workouts' },
-    { view: 'stats', icon: <TrendingUp />, label: 'Stats' },
+    { view: 'stats', icon: <TrendingUp />, label: 'Personal Progress' },
     { view: 'ai', icon: <BrainCircuit />, label: 'AI Trainer' },
     { view: 'challenges', icon: <Award />, label: 'Achievements' },
     { view: 'nutrition', icon: <Utensils />, label: 'Nutrition' },
@@ -213,8 +272,8 @@ export default function App() {
             <div className="absolute bottom-0 right-0 size-3 bg-primary rounded-full border-2 border-white"></div>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs text-text-sub font-medium">Greetings,</span>
-            <h2 className="text-lg font-bold leading-none tracking-tight font-display">{user.name.split(' ')[0]}</h2>
+            <span className="text-xs text-text-sub font-medium">Welcome back,</span>
+            <h2 className="text-lg font-bold leading-none tracking-tight font-display">{user.name.split(' ')[0]}!</h2>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -233,12 +292,12 @@ export default function App() {
               {isNotificationOpen && (
                 <div className="absolute top-12 right-0 w-80 bg-white rounded-2xl shadow-float border border-slate-100 py-4 animate-in fade-in zoom-in-95 duration-200 z-50 overflow-hidden">
                    <div className="px-5 pb-3 border-b border-slate-50 flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-text-main uppercase tracking-widest">Recent Signals</span>
-                      <button onClick={() => setNotifications(prev => prev.map(n => ({...n, read: true})))} className="text-[9px] font-bold text-primary-dark uppercase">Clear All</button>
+                      <span className="text-[10px] font-bold text-text-main uppercase tracking-widest">Notifications</span>
+                      <button onClick={() => setNotifications([])} className="text-[9px] font-bold text-primary-dark uppercase">Clear All</button>
                    </div>
                    <div className="max-h-64 overflow-y-auto no-scrollbar">
                       {notifications.length === 0 ? (
-                        <div className="p-8 text-center opacity-20"><Bell size={32} className="mx-auto mb-2"/><p className="text-xs font-bold uppercase">Stream is empty</p></div>
+                        <div className="p-8 text-center opacity-20"><Bell size={32} className="mx-auto mb-2"/><p className="text-xs font-bold uppercase">No new notifications</p></div>
                       ) : (
                         notifications.slice(0, 5).map(n => (
                           <button 
@@ -301,8 +360,8 @@ export default function App() {
             </>
          ) : (
             <>
-               <NavTab icon={<Utensils />} label="Eats" active={currentView === 'nutrition'} onClick={() => handleViewChange('nutrition')} />
-               <NavTab icon={<Award />} label="Stats" active={currentView === 'challenges'} onClick={() => handleViewChange('challenges')} />
+               <NavTab icon={<Dumbbell />} label="Workouts" active={currentView === 'workouts'} onClick={() => handleViewChange('workouts')} />
+               <NavTab icon={<Award />} label="Personal Progress" active={currentView === 'challenges'} onClick={() => handleViewChange('challenges')} />
             </>
          )}
       </nav>
@@ -326,6 +385,35 @@ export default function App() {
                </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Double Booking Confirmation Modal */}
+      {pendingBookingId && (
+        <div className="fixed inset-0 z-[11000] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
+           <div className="bg-white w-full max-w-sm rounded-[2.5rem] p-8 shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-500 text-center">
+              <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-primary">
+                 <AlertCircle size={32} />
+              </div>
+              <h3 className="text-xl font-bold text-text-main font-display mb-3">Scheduling Conflict</h3>
+              <p className="text-sm text-text-sub font-medium leading-relaxed mb-8">
+                You are already booked to another class for the day. Do you wish to book again?
+              </p>
+              <div className="flex gap-4">
+                 <button 
+                  onClick={() => confirmDoubleBooking(false)}
+                  className="flex-1 py-4 rounded-2xl bg-red-500 text-white font-bold uppercase tracking-widest text-xs shadow-lg shadow-red-500/20 active:scale-95 transition-all"
+                 >
+                   No
+                 </button>
+                 <button 
+                  onClick={() => confirmDoubleBooking(true)}
+                  className="flex-1 py-4 rounded-2xl bg-primary text-[#0b3d30] font-bold uppercase tracking-widest text-xs shadow-lg shadow-primary/20 active:scale-95 transition-all"
+                 >
+                   Yes
+                 </button>
+              </div>
+           </div>
         </div>
       )}
     </div>
@@ -359,10 +447,30 @@ const PlaceholderView = ({ title }: { title: string }) => (
   </div>
 );
 
-const HomeView = ({ onAction }: { onAction: (view: View) => void }) => {
+const HomeView = ({ user, onAction }: { user: User, onAction: (view: View) => void }) => {
+  const isAdmin = user?.role === 'admin' || user?.role === 'owner' || user?.role === 'trainer';
+  const quote = useMemo(() => MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)], []);
+
   return (
-    <div className="p-6 space-y-8 pb-32 animate-in fade-in duration-500">
-      <section className="flex flex-col gap-4">
+    <div className="p-6 space-y-2 pb-32 animate-in fade-in duration-500 flex flex-col items-center">
+      {/* Motivational Quote for Members only */}
+      {!isAdmin && (
+        <section className="animate-bounce-in w-full py-2 flex flex-col items-center justify-center text-center">
+           <div className="bg-white/90 backdrop-blur-md p-6 rounded-[2.5rem] border-2 border-primary/20 shadow-soft max-w-sm relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+              <Quote size={40} className="text-primary/10 absolute -top-2 -left-2 rotate-12" />
+              <p className="font-display font-medium text-xl italic text-text-main leading-relaxed relative z-10">
+                "{quote}"
+              </p>
+              <div className="mt-4 flex items-center justify-center gap-2">
+                 <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
+                 <div className="w-20 h-0.5 bg-gradient-to-r from-primary to-transparent"></div>
+              </div>
+           </div>
+        </section>
+      )}
+
+      <section className="flex flex-col gap-4 w-full pt-4">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-bold tracking-tight font-display">Today's Focus</h3>
           <button onClick={() => onAction('workouts')} className="text-sm font-medium text-primary hover:text-primary-dark transition-colors">View Plan</button>
@@ -406,7 +514,7 @@ const HomeView = ({ onAction }: { onAction: (view: View) => void }) => {
 const generateMockSchedule = (gym_id: string): ClassSession[] => {
   const sessions: ClassSession[] = [];
   let d = new Date();
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 60; i++) {
     const dateStr = d.toISOString().split('T')[0];
     [9, 12, 18].forEach((h) => {
       sessions.push({

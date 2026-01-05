@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Utensils, Apple, Info, Plus, ChevronRight, Search, 
@@ -57,7 +56,7 @@ export const Nutrition: React.FC = () => {
       <div className="w-20 h-20 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-8 shadow-soft">
          <Apple size={40} strokeWidth={2.5} />
       </div>
-      <h2 className="text-3xl font-bold text-text-main tracking-tighter leading-none mb-4 font-display">Nutrition Node</h2>
+      <h2 className="text-3xl font-bold text-text-main tracking-tighter leading-none mb-4 font-display">Nutrition</h2>
       <p className="text-text-sub text-sm font-medium leading-relaxed mb-8 max-w-xs">
         Fuel your performance. This optional node tracks energy and habits without clinical medical pressure.
       </p>
@@ -81,7 +80,7 @@ export const Nutrition: React.FC = () => {
       <div className="shrink-0 p-6 bg-white/80 backdrop-blur-md border-b border-slate-50 z-10">
         <div className="flex justify-between items-center mb-2">
           <h2 className="text-2xl font-bold text-text-main tracking-tight font-display">
-            {activeTab === 'home' && 'Eats Hub'}
+            {activeTab === 'home' && 'Nutrition'}
             {activeTab === 'plans' && 'Meal Plans'}
             {activeTab === 'grocery' && 'List'}
           </h2>

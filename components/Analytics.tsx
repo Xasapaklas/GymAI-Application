@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
@@ -23,7 +22,7 @@ export const Analytics: React.FC = () => {
   return (
     <div className="p-6 space-y-8 pb-32 animate-in fade-in duration-500 bg-background-light h-full overflow-y-auto no-scrollbar">
       <div>
-        <h2 className="text-2xl font-bold text-text-main tracking-tight font-display uppercase">Business Health</h2>
+        <h2 className="text-2xl font-bold text-text-main tracking-tight font-display uppercase">Analytics</h2>
         <p className="text-[10px] text-text-sub font-bold uppercase tracking-widest mt-1">Neural Enterprise Analytics</p>
       </div>
 

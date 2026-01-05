@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Star, Activity, CheckCircle2, Smile, Calendar, 
@@ -30,7 +29,7 @@ export const Achievements: React.FC = () => {
   return (
     <div className="h-full flex flex-col animate-in fade-in duration-500 overflow-hidden bg-background-light">
       <div className="p-6 shrink-0">
-        <h2 className="text-2xl font-bold text-text-main tracking-tight font-display">Milestones</h2>
+        <h2 className="text-2xl font-bold text-text-main tracking-tight font-display">Achievements</h2>
         <p className="text-[10px] text-text-sub font-bold uppercase tracking-widest mt-1">Unlocked performance signals</p>
       </div>
 

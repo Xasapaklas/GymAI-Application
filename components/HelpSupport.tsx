@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Phone, Mail, Zap, Bug, Lightbulb, X, Camera, Send, CheckCircle2, FileText, ChevronRight, ShieldCheck, MessageSquare } from 'lucide-react';
 import { UserRole } from '../types';
@@ -9,7 +8,7 @@ export const HelpSupport: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
     <div className="p-6 pb-32 animate-in fade-in duration-500 space-y-10 scroll-container h-full bg-background-light">
       <div className="flex justify-between items-start">
         <div>
-          <h2 className="text-2xl font-bold text-text-main tracking-tight font-display uppercase">Help Hub</h2>
+          <h2 className="text-2xl font-bold text-text-main tracking-tight font-display uppercase">{userRole === 'admin' ? "Support Line" : "Help"}</h2>
           <p className="text-text-sub text-[10px] font-bold uppercase tracking-widest mt-1">Operational support stream</p>
         </div>
         <div className="bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-100 flex items-center gap-2 shadow-sm">
@@ -53,7 +52,7 @@ export const HelpSupport: React.FC<{ userRole: UserRole }> = ({ userRole }) => {
       </section>
 
       <div className="pt-10 flex flex-col items-center gap-3 opacity-20">
-        <p className="text-[9px] font-bold text-text-sub uppercase tracking-[0.4em]">GymBody AI Protocol Support</p>
+        <p className="text-[9px] font-bold text-text-sub uppercase tracking-[0.4em]">GymBody AI System Support</p>
         <p className="text-[10px] font-mono text-text-sub">NODE_ID: GB-88-ALPHA-L</p>
       </div>
     </div>

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Sparkles, Dumbbell } from 'lucide-react';
 import { sendMessageToGemini } from '../services/geminiService';
@@ -59,7 +58,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ mode = 'front_desk', g
            </div>
            <div>
              <h3 className="font-bold text-lg text-text-main tracking-tight font-display">
-                {isTrainer ? 'Coach AI' : 'Gym Concierge'}
+                {isTrainer ? 'AI Trainer' : 'Gym Concierge'}
              </h3>
              <p className="text-[10px] font-bold uppercase text-text-sub tracking-widest">
                 Serving {gym.name}

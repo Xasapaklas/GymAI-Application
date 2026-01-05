@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { User } from '../types';
 import { Mail, Phone, MapPin, Award, Activity, Edit2, Save, Camera, CheckCircle2 } from 'lucide-react';
@@ -9,7 +8,7 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ user }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [bio, setBio] = useState('Protocol: Performance Node | Early Bird Status: Active');
+  const [bio, setBio] = useState('Status: Active | Early Bird Member');
   
   return (
     <div className="p-6 pb-32 animate-in fade-in duration-500 bg-background-light">
@@ -56,7 +55,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
       </div>
 
       <div className="mt-10 space-y-4">
-        <h3 className="text-text-sub font-bold uppercase text-[11px] tracking-[0.2em] px-2 font-display">Communication Protocol</h3>
+        <h3 className="text-text-sub font-bold uppercase text-[11px] tracking-[0.2em] px-2 font-display">Communication</h3>
         <ContactField icon={<Mail />} label="Secure Email" val="member@gymbody.ai" />
         <ContactField icon={<Phone />} label="Voice Node" val="+1 (555) 123-4567" />
       </div>

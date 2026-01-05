@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Plus, Search, ClipboardCheck, Edit3, Send, Zap, Users, ChevronRight } from 'lucide-react';
 
@@ -12,7 +11,7 @@ interface CustomWorkout {
 }
 
 const INITIAL_WORKOUTS: CustomWorkout[] = [
-  { id: 'cw1', title: 'Strength Protocol A', category: 'Strength', duration: '60m', description: 'Focus on compound lifts. 5x5 squats.', assignedCount: 12 },
+  { id: 'cw1', title: 'Strength Routine A', category: 'Strength', duration: '60m', description: 'Focus on compound lifts. 5x5 squats.', assignedCount: 12 },
   { id: 'cw2', title: 'Engine Builder V2', category: 'HIIT', duration: '45m', description: 'Interval aerobic capacity work.', assignedCount: 4 },
 ];
 
@@ -31,12 +30,12 @@ export const AdminWorkouts: React.FC = () => {
         </div>
         
         <button className="w-full bg-primary text-[#0b3d30] font-bold py-4 rounded-xl uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 shadow-lg shadow-primary/20 active:scale-[0.98] transition-all font-display">
-          <Plus size={18} strokeWidth={3} /> Create new protocol
+          <Plus size={18} strokeWidth={3} /> Create new workout
         </button>
       </div>
 
       <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-4 pb-32">
-        <h3 className="text-[10px] font-bold text-text-sub uppercase tracking-[0.3em] px-1 mb-2 font-display">Library Nodes</h3>
+        <h3 className="text-[10px] font-bold text-text-sub uppercase tracking-[0.3em] px-1 mb-2 font-display">Library</h3>
         
         {workouts.map(w => (
           <div key={w.id} className="bg-white rounded-2xl p-6 border border-slate-100 relative overflow-hidden group shadow-soft transition-all hover:border-primary/30">
